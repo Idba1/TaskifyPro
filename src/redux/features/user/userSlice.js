@@ -39,6 +39,10 @@ const userSlice = createSlice({
         toggleLoading: (state, { payload }) => {
             state.isLoading = payload;
         },
+        logout: (state) => {
+            state.name = "";
+            state.email = "";
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(createUser.pending, (state) => {
@@ -63,5 +67,5 @@ const userSlice = createSlice({
     },
 });
 
-export const { setUser, toggleLoading } = userSlice.actions;
+export const { setUser, toggleLoading, logout } = userSlice.actions;
 export default userSlice.reducer;
