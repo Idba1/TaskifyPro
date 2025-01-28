@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import loginImage from '../assets/image/login.svg';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { createUser } from '../redux/features/user/userSlice';
 
 const Signup = () => {
     const { handleSubmit, register, control } = useForm();
@@ -9,6 +11,8 @@ const Signup = () => {
     const confirmPassword = useWatch({ control, name: 'confirmPassword' });
     const navigate = useNavigate();
     const [disabled, setDisabled] = useState(true);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (
@@ -24,10 +28,21 @@ const Signup = () => {
         }
     }, [password, confirmPassword]);
 
-    const onSubmit = ({ name, email, password }) => {
-        // Email Password signup
-        console.log(name, email, password);
+    const onSubmit = async ({ name, email, password }) => {
+        console.log("Form Submitted", { name, email, password });
+        try {
+            const actionResult = await dispatch(createUser({ email, password, name }));
+            console.log("Action result", actionResult);
+            if (createUser.fulfilled.match(actionResult)) {
+                console.log("User created successfully:", actionResult.payload);
+                navigate('/');
+            }
+        } catch (error) {
+            console.error("User creation failed:", error);
+        }
     };
+
+
 
     const handleGoogleLogin = () => {
         // Google Login
